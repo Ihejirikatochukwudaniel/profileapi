@@ -1,7 +1,6 @@
 """
 Django settings for profile_api project.
 """
-
 from pathlib import Path
 from decouple import config
 import os
@@ -18,9 +17,15 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 # Add Railway domain if present
-RAILWAY_STATIC_URL = config('RAILWAY_STATIC_URL', default='')
-if RAILWAY_STATIC_URL:
-    ALLOWED_HOSTS.append(RAILWAY_STATIC_URL.replace('https://', '').replace('http://', ''))
+# Railway provides RAILWAY_PUBLIC_DOMAIN or you can use the generated domain
+RAILWAY_PUBLIC_DOMAIN = config('RAILWAY_PUBLIC_DOMAIN', default='')
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+
+# Also add the specific Railway domain directly as fallback
+railway_domain = 'profileapi-production-3335.up.railway.app'
+if railway_domain not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(railway_domain)
 
 # Application definition
 INSTALLED_APPS = [
