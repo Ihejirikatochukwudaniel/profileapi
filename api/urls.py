@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import get_profile
+from . import views
 
 urlpatterns = [
-    path('me/', get_profile, name='get_profile'),  # <-- Important route
+    path('', views.api_root, name='api_root'),
+    path('me/', views.get_profile, name='get_profile'),
+    # Add more endpoints as needed
 ]
