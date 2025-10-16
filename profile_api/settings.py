@@ -23,7 +23,7 @@ if RAILWAY_PUBLIC_DOMAIN:
     ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
 
 # Also add the specific Railway domain directly as fallback
-railway_domain = 'profileapi-production-3335.up.railway.app'
+railway_domain = 'profileapi-production-1c95.up.railway.app'
 if railway_domain not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(railway_domain)
 
@@ -134,3 +134,4 @@ LOGGING = {
         },
     },
 }
+
