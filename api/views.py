@@ -31,11 +31,12 @@ def get_profile(request):
         "status": "success",
         "user": {
             "name": "Tochukwu Ihejirika",
-            "email": "tochukwu.ihejirika@example.com",
-            "stack": "Backend Developer | Django & API Specialist"
+            "email": "tochukwuihejirika3@gmail.com",
+            "stack": "Backend Developer | FastAPI & API Specialist"
         },
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "fact": cat_fact
     }
 
     return JsonResponse(data)
+
