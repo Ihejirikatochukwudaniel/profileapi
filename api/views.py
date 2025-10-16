@@ -21,9 +21,9 @@ def get_profile(request):
         # Return profile data
         return JsonResponse({
             'id': 1,
-            'name': 'John Doe',
-            'email': 'john@example.com',
-            'bio': 'Software Developer'
+            'name': 'Tochukwu Ihejirka',
+            'email': 'tochukwuihejirika3@gmail.com',
+            'bio': 'Backend Engineer'
         })
     
     elif request.method in ['POST', 'PUT']:
@@ -42,3 +42,4 @@ def get_profile(request):
     return JsonResponse({
         'error': 'Method not allowed'
     }, status=405)
+
