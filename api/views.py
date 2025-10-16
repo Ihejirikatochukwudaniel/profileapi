@@ -11,41 +11,31 @@ logger = logging.getLogger(__name__)
 
 CAT_FACTS_API_URL = "https://catfact.ninja/fact"
 
-@require_GET
-def api_root(request):
-    """Root endpoint for quick sanity check."""
-    return JsonResponse({
-        "message": "Welcome to Tochukwu Ihejirika’s Profile API",
-        "endpoints": {
-            "profile": "/me/"
-        },
-        "timestamp": datetime.utcnow().isoformat() + "Z"
-    })
-
 
 @require_GET
 def get_profile(request):
     """
-    Returns personal profile information and a dynamic cat fact.
+    Returns user profile info with a random cat fact.
+    Matches HNG task JSON structure requirements.
     """
     try:
         # Fetch random cat fact
         response = requests.get(CAT_FACTS_API_URL, timeout=5)
-        cat_fact = response.json().get("fact", "Cats are awesome!")
+        cat_fact_data = response.json()
+        cat_fact = cat_fact_data.get("fact", "Cats are fascinating creatures.")
     except Exception as e:
         logger.error(f"Error fetching cat fact: {e}")
-        cat_fact = "Could not fetch cat fact right now."
+        cat_fact = "Unable to fetch cat fact right now."
 
-    # Build your profile response
-    profile_data = {
-        "full_name": "Tochukwu Ihejirika",
-        "github_handle": "@tochukwu-ihejirika",
-        "linkedin": "https://linkedin.com/in/tochukwu-ihejirika",
-        "role": "Backend Developer | FastAPI" ,
-        "email": "tochukwuihejirika@gmail.com.com",
-        "skills": ["Python", "REST APIs", "JavaScript", "React", "SQL"],
-        "current_time": datetime.utcnow().isoformat() + "Z",
-        "fun_fact": cat_fact,
+    data = {
+        "status": "success",
+        "user": {
+            "name": "Tochukwu Ihejirika",
+            "email": "tochukwu.ihejirika@example.com",
+            "stack": "Backend Developer | Django & API Specialist"
+        },
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "fact": cat_fact
     }
 
-    return JsonResponse(profile_data)
+    return JsonResponse(data)
