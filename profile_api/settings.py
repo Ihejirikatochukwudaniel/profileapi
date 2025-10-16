@@ -1,5 +1,5 @@
 """
-Django settings for profile_api project.
+Django settings for profile_api project (Fly.io deployment).
 """
 from pathlib import Path
 from decouple import config
@@ -14,18 +14,15 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+# Fly.io host settings
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
-# Add Railway domain if present
-# Railway provides RAILWAY_PUBLIC_DOMAIN or you can use the generated domain
-RAILWAY_PUBLIC_DOMAIN = config('RAILWAY_PUBLIC_DOMAIN', default='')
-if RAILWAY_PUBLIC_DOMAIN:
-    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
-
-# Also add the specific Railway domain directly as fallback
-railway_domain = 'profileapi-production-47d2.up.railway.app'
-if railway_domain not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(railway_domain)
+# Add Fly.io internal and external domains dynamically
+FLY_APP_NAME = config('FLY_APP_NAME', default='')
+if FLY_APP_NAME:
+    fly_domain = f'{FLY_APP_NAME}.fly.dev'
+    internal_domain = f'{FLY_APP_NAME}.internal'
+    ALLOWED_HOSTS.extend([fly_domain, internal_domain])
 
 # Application definition
 INSTALLED_APPS = [
@@ -75,7 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'profile_api.wsgi.application'
 
-# Database
+# Database (SQLite for now; switch to PostgreSQL for production)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -85,18 +82,10 @@ DATABASES = {
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # Internationalization
@@ -106,7 +95,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -117,22 +106,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
-    },
+    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'root': {'handlers': ['console'], 'level': 'INFO'},
     'loggers': {
-        'api': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
+        'api': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
     },
 }
-
-
