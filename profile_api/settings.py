@@ -14,15 +14,13 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# Fly.io host settings
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
-
-# Add Fly.io internal and external domains dynamically
-FLY_APP_NAME = config('FLY_APP_NAME', default='')
-if FLY_APP_NAME:
-    fly_domain = f'{FLY_APP_NAME}.fly.dev'
-    internal_domain = f'{FLY_APP_NAME}.internal'
-    ALLOWED_HOSTS.extend([fly_domain, internal_domain])
+# Allowed hosts for Fly.io and local development
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'profileapi.fly.dev',
+    'profileapi.internal',  # Fly.io internal network
+]
 
 # Application definition
 INSTALLED_APPS = [
