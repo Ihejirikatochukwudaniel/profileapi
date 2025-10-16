@@ -10,7 +10,9 @@ def health_check(request):
     })
 
 urlpatterns = [
+    path('', include('api.urls')),  
     path('admin/', admin.site.urls),
     path('', health_check, name='health_check'),  # Root URL
     path('api/', include('api.urls')),  # API endpoints
 ]
+
